@@ -165,11 +165,16 @@ class DataModule:
 
             return batch_generator | batch_learner
 
+        # datasets 4.x spawns a subprocess even for num_proc=1, which breaks when
+        # CUDA is already initialized (fork can't re-init CUDA in child). Use None
+        # to run inline; only fork when genuinely parallel workers are requested.
+        num_proc = self.config.num_proc if self.config.num_proc > 1 else None
+
         # tokenize
         dataset = dataset.map(
             tokenize_fn,
             batched=True,
-            num_proc=self.config.num_proc,
+            num_proc=num_proc,
             desc="Tokenize datasets",
         )
 
@@ -188,7 +193,7 @@ class DataModule:
         dataset = dataset.map(
             format_keys,
             batched=False,
-            num_proc=self.config.num_proc,
+            num_proc=num_proc,
             desc="Set meta_keys of datasets",
         )
 

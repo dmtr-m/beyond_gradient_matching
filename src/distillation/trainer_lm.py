@@ -90,6 +90,12 @@ class TrainerLM(TrainerBase):
                 )
                 train_logs = []
 
+        # save last checkpoint before evaluating so a crash in evaluate()
+        # never loses a fully-trained model
+        last_ckpt_path = os.path.join(self.config.save_model_dir, "last-ckpt")
+        generator.save_model(last_ckpt_path)
+        logger.info(f"Save last checkpoint at `{last_ckpt_path}`")
+
         results = self.evaluate(
             generator, learner, evaluator, data_module, coreset_module, step=it + 1
         )
@@ -98,11 +104,6 @@ class TrainerLM(TrainerBase):
             best_val_score = results[f"valid.{evaluator.metric_key}"]
             generator.save_model(best_ckpt_path)
             logger.info(f"Save best checkpoint at `{best_ckpt_path}`")
-
-        # save last checkpoint
-        last_ckpt_path = os.path.join(self.config.save_model_dir, "last-ckpt")
-        generator.save_model(last_ckpt_path)
-        logger.info(f"Save last checkpoint at `{last_ckpt_path}`")
 
         # save tokenizer
         tokenizer_path = os.path.join(self.config.save_model_dir, "tokenizer")

@@ -54,6 +54,19 @@ class TrainConfig:
 
     generate_dataset_interval: int = 10
 
+    # MTT-specific
+    mtt_buffer_path: str = ""
+    mtt_num_experts: int = 100
+    mtt_train_epochs: int = 30
+    mtt_save_interval: int = 10
+    mtt_expert_epochs: int = 3
+    mtt_syn_steps: int = 20
+    mtt_max_start_epoch: int = 20
+    mtt_syn_lr: float = 0.01
+    mtt_train_syn_lr: bool = True
+    mtt_classifier_only: bool = True
+    mtt_load_all: bool = False
+
     optimizer_type: str = "adamw"  # ["sgd", "adam"]
     scheduler_type: str = "linear"
     lr: float = 1.0e-6
@@ -122,7 +135,7 @@ class TrainerBase(metaclass=ABCMeta):
             self.distilled_data_config.dpc
             * self.distilled_data_config.over_sample_ratio
         )
-        dataset_list = generator.generate_dataset(dpc=generate_dpc, n=5)
+        dataset_list = generator.generate_dataset(dpc=generate_dpc, n=self.distilled_data_config.n_eval_dataset)
         if self.distilled_data_config.over_sample_ratio > 1.0:
             dataset_list = [
                 coreset_module.get_coreset(dataset, dpc=self.distilled_data_config.dpc)

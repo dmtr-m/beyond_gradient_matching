@@ -330,7 +330,7 @@ def get_eval_dataset(
     eval_dataset = eval_dataset.map(
         tokenize_function,
         batched=True,
-        num_proc=data_module.config.num_proc,
+        num_proc=data_module.config.num_proc if data_module.config.num_proc > 1 else None,
         desc="Tokenize datasets",
     )
 
