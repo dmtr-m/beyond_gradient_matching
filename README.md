@@ -1,3 +1,9 @@
+# Beyond Gradient Matching: Dataset Distillation for Text Classification
+
+This repository is an extension of [DiLM](https://github.com/arumaekawa/DiLM) by Maekawa et al. (NAACL 2024 Findings). It builds directly on the original codebase and uses their model-as-a-dataset framework, in which a GPT-2 model is fine-tuned to generate relevant training samples. On top of it, we implement several dataset distillation techniques for text classification, namely Gradient Matching, Trajectory Matching and Hessian Matching, and propose our own method, which turned out to be the most effective. All credit for the original DiLM framework and code goes to its authors; the original README follows below.
+
+---
+
 # DiLM: Distilling Dataset into Language Model
 
 Implementaiton of "DiLM: Distilling Dataset into Language Model for Text-level Dataset Distillation" (accepted by NAACL2024 Findings)".
